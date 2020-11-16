@@ -16,9 +16,13 @@ import React from 'react';
     attire
 */
 
-class myComponent extends React.Component {
+// class SearchBar extends React.Component {
+
+// }
+
+class TableComponent extends React.Component {
     data = [];
-    componentDidMount() {
+    fetchData() {                                   //Fetches the data
         const apiUrl = 'https://code-challenge.spectrumtoolbox.com/api/restaurants';
         fetch(apiUrl, {
             method: 'GET',
@@ -29,7 +33,20 @@ class myComponent extends React.Component {
         .then(function(data) {
             this.data = data;
         });
+    }
+
+    componentDidMount() {
+        this.fetchData();
     } 
+
+    onChangeHandler(e) {                            //Filters Data
+        console.log(e);
+
+    }
+
+    sortData() {
+        
+    }
 
   render() {
 
@@ -42,6 +59,19 @@ class myComponent extends React.Component {
                 <td>Phone Number</td>
                 <td>Genre</td>
             </thead>
+            {data.map(data => {                                         //Retrieves sorted data
+                const {id, name, address1, city, state, zip, lat, long, telephone, tags, website, genre, hours, attire} = data;
+                return (
+                    <tr key={id}>
+                        <td>{name}</td>
+                        <td>{city}</td>
+                        <td>{state}</td>
+                        <td>{telephone}</td>
+                        <td>{genre}</td>
+                    </tr>
+                );
+            })}
+
         </table>
     );
   }
