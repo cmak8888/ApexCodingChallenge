@@ -21,7 +21,29 @@ import React from 'react';
 // }
 
 class TableComponent extends React.Component {
-    data = [];
+    state = {
+        sorts: this.props.sorters
+    };
+
+    static defaultProps = {
+        sorters: [{
+            property: 'name'
+        }, {
+            property: 'address1'
+        }, {
+            property: 'city'
+        }, {
+            property: 'state'
+        }, {
+            property: 'zip'
+        }, {
+            property: 'telephone'
+        }, {
+            property: 'genre'
+        }]
+      };
+
+
     fetchData() {                                   //Fetches the data
         const apiUrl = 'https://code-challenge.spectrumtoolbox.com/api/restaurants';
         fetch(apiUrl, {
@@ -31,6 +53,9 @@ class TableComponent extends React.Component {
             },
         }).then((response) => response.json())
         .then(function(data) {
+            this.setState({
+                data: this.parseData(sorts)
+            })
             this.data = data;
         });
     }
@@ -50,30 +75,38 @@ class TableComponent extends React.Component {
 
   render() {
 
-    return (
-        <table>
-            <thead>
-                <td>Name</td>
-                <td>City</td>
-                <td>State</td>
-                <td>Phone Number</td>
-                <td>Genre</td>
-            </thead>
-            {data.map(data => {                                         //Retrieves sorted data
-                const {id, name, address1, city, state, zip, lat, long, telephone, tags, website, genre, hours, attire} = data;
-                return (
-                    <tr key={id}>
-                        <td>{name}</td>
-                        <td>{city}</td>
-                        <td>{state}</td>
-                        <td>{telephone}</td>
-                        <td>{genre}</td>
-                    </tr>
-                );
-            })}
+    return data ? this.renderData(data) : this.renderLoading();
+  }
 
-        </table>
-    );
+  renderData(data) {
+      if(data && data.length) {
+          return (
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Phone Number</th>
+                        <th>Genre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {data.map(data => {                                         //Retrieves sorted data
+                    const {id, name, address1, city, state, zip, lat, long, telephone, tags, website, genre, hours, attire} = data;
+                    return (
+                        <tr key={id}>
+                            <td>{name}</td>
+                            <td>{city}</td>
+                            <td>{state}</td>
+                            <td>{telephone}</td>
+                            <td>{genre}</td>
+                        </tr>
+                    );
+                })}
+                </tbody>
+            </table>);
+      }
   }
 }
 export default myComponent;
